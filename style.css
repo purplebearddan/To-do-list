@@ -1,10 +1,23 @@
 * {
     box-sizing: border-box;
-    margin: 20px;
+    
   }
 
+  body{
+    position: relative;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #141010;
+}
+
+
 .TestingTODO{
-    background-color: blueviolet;
+    padding:40px;
+    background-color: #c3195d;
+    font-weight: 400;
+    font-size: 24px;
 }
 
 
@@ -14,31 +27,25 @@
     text-align: center;
 }
 
-.container {
-    display: block;
-    width: 600px;
-    margin: 100px auto 0;
-    background-color: aquamarine;
-    font-weight: 400;
-    font-size: 24px;
-    text-align: center;
-  }
+input{
+  margin-top: 40px;
+  Padding: 5px;
+  font-size: 24px;
+}
 
-  label[for='myInput'] {
-    color: #3fbd05;
-    font-weight: 700;
-    font-size: 15px;
-    padding: 30px 0 10px;
-    margin: 0;
-    text-transform: uppercase;
-  }
 
+
+
+button{
+  Padding: 5px;
+  width: 100px;
+  font-size: 24px;
+}
 
 ul{
-    margin: 0;
-    padding: 0;
+   
     background-color: bisque;
-    /*list-style: none;*/
+    list-style: none;
 
 }
 
