@@ -12,13 +12,6 @@ const completeToDoListContainer = document.querySelector(
 // starter to do list
 let toDos = []
 
-// each todo data model
-// const eachToDo = {
-//     id: 0,
-//     name: 'Shopping',
-//     complete: false,
-// }
-
 // create each item as a DOM Object
 const toDoElement = (todo) => {
     // div class="toDoItem" id="toDo-${todo.id}-Wrapper">
@@ -122,6 +115,7 @@ const handleFormSubmission = (event) => {
     toDos = [newToDo, ...toDos]
 
     renderToDos()
+    newToDoInput.value = ''
 }
 
 newToDoForm.addEventListener('submit', handleFormSubmission)
