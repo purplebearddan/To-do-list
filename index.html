@@ -10,30 +10,37 @@
 </head>
 
 <body>
-    <div id="top">
-        <h1>Enter Item To-Do</h1>
-        <form id="form">
-            <input type="text" id="item" placeholder="To do ..." />
-            <input type="submit" id="item-submit" value="Add task" />
-        </form>
-        <!--This will add-->
-
+    <header>
         <h1>ToDo List</h1>
-        <div id="list"></div>
-    </div>
-
-    <!--END OF TOP-->
-
-    <div id="bottom">
-        <header>
-            <h1>Done</h1>
-        </header>
-        <div class="list-completed">
+    </header>
+    <main>
+        <div>
+            <form id="newToDoForm">
+                <label for="newToDoInput">
+                    <input type="text" id="newToDoInput" name="newToDoInput" placeholder="Shopping...">
+                </label>
+                <button id="addToDoButton" type="submit">
+                    Add ToDo
+                </button>
+            </form>
+        </div>
+        <div>
+        <h2>ToDo's</h2>    
+            <div id="toDoListContainer">
+                <!-- ToDo's go here -->
+            </div>
             
+        </div>
+        <div>
+            <h2>Complete ToDo's</h2>
+        <div id="completeToDoListContainer">
+            <!-- Completed ToDo's go here -->
         </div>
     </div>
 
-    <script src="app.js"></script>
+    </main>
+    <footer></footer>
+    <script src="app.js" defer></script>
 </body>
 
 </html>

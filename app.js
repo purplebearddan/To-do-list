@@ -1,143 +1,127 @@
-const form = document.querySelector("form");
-const input = document.querySelector("#item");
-const list = document.querySelector("#list");
+// form elements
+const newToDoForm = document.querySelector('#newToDoForm')
 
-form.addEventListener("submit", (e) => {
-  //stop refreshing the page from the form submitting
-  e.preventDefault();
-  //get the input value
-  const task = input.value;
-  
+// todo list
+const toDoListContainer = document.querySelector('#toDoListContainer')
 
-  const todoList = document.createElement("div");
-  todoList.className = "todo-list";
+// completed todos
+const completeToDoListContainer = document.querySelector(
+    '#completeToDoListContainer',
+)
 
-  const taskContentElement = document.createElement("div");
-  taskContentElement.className = "content";
-  todoList.appendChild(taskContentElement);
+// starter to do list
+let toDos = []
 
-  //create checkbox for completedtask
-  const checkbox = document.createElement("input");
-  checkbox.setAttribute("type", "checkbox");
-  checkbox.setAttribute("value", task);
-  checkbox.className = "todoItem";
-  checkbox.addEventListener('change', completeItem)
-  taskContentElement.appendChild(checkbox);
+// each todo data model
+// const eachToDo = {
+//     id: 0,
+//     name: 'Shopping',
+//     complete: false,
+// }
 
-  //create input
-  const taskInput = document.createElement("input");
-  taskInput.className = "text";
-  taskInput.setAttribute("type", "text");
-  taskInput.setAttribute("value", task);
-  taskInput.setAttribute("readonly", "readonly");
-  taskContentElement.appendChild(taskInput);
+// create each item as a DOM Object
+const toDoElement = (todo) => {
+    // div class="toDoItem" id="toDo-${todo.id}-Wrapper">
+    const toDoItemWrapper = document.createElement('div')
+    toDoItemWrapper.classList.add('toDoItem')
+    toDoItemWrapper.setAttribute('id', `toDo-${todo.id}-Wrapper`)
 
-  //edit button
-  const editBtn = document.createElement("button");
-  editBtn.innerText = "Edit";
-  editBtn.className = "edit";
-  editBtn.addEventListener('click',editItem)
-  taskContentElement.appendChild(editBtn);
+    //   div>input type="checkbox" name="completeToDoItemCheckbox-${todo.id}" id="${todo.id}CompleteCheckbox">
+    const checkboxWrapper = document.createElement('div')
+    const checkboxElement = document.createElement('input')
+    checkboxElement.setAttribute('type', 'checkbox')
+    checkboxElement.setAttribute('name', `completeToDoItemCheckbox-${todo.id}`)
+    checkboxElement.setAttribute('id', `${todo.id}CompleteCheckbox`)
+    if (todo.complete) {
+        checkboxElement.setAttribute('checked', true)
+    }
+    checkboxElement.addEventListener('change', () => completeToDo(todo))
+    checkboxWrapper.appendChild(checkboxElement)
 
-    //complete button
-   const completeBtn = document.createElement("button");
-  completeBtn.innerText = "Complete";
-  completeBtn.className = "complete";
-  completeBtn.addEventListener("click", completeItem3);
-  taskContentElement.appendChild(completeBtn);
+    //   div class="toDoLabel">${todo.name}
+    const toDoLabel = document.createElement('div')
+    toDoLabel.setAttribute('contenteditable', '')
+    toDoLabel.classList.add('toDoLabel')
+    toDoLabel.addEventListener('blur', () =>
+        editToDo(todo, toDoLabel.textContent),
+    )
+    toDoLabel.textContent = todo.name
 
-  //delete button
-  const deleteBtn = document.createElement("button");
-  deleteBtn.innerText = "Delete";
-  deleteBtn.className = "delete";
-  deleteBtn.addEventListener("click", removeItem);
-  taskContentElement.appendChild(deleteBtn);
+    //   div>button class="deleteButton" ❌
+    const deleteButtonWrapper = document.createElement('div')
+    const deleteButton = document.createElement('button')
+    deleteButton.classList.add('deleteButton')
+    deleteButton.textContent = '❌'
+    deleteButton.addEventListener('click', () => deleteToDo(todo))
 
-  input.value = "";
+    deleteButtonWrapper.appendChild(deleteButton)
 
-  list.appendChild(todoList);
-});
+    toDoItemWrapper.appendChild(checkboxWrapper)
+    toDoItemWrapper.appendChild(toDoLabel)
+    toDoItemWrapper.appendChild(deleteButtonWrapper)
 
+    return toDoItemWrapper
+}
+const renderToDos = () => {
+    const toDoListContainer = document.querySelector('#toDoListContainer')
+    const completeToDoListContainer = document.querySelector(
+        '#completeToDoListContainer',
+    )
 
-//complete event
-function completeItem(event) {
-  let item = this.parentNode;
-  
-    let parent = item.parentNode;
-    let id = item.id;
-    console.log(id)
-  
-  if(event.target.checked){
-    console.log('text')
-    
+    toDoListContainer.innerHTML = ''
+    toDos
+        .filter((todo) => !todo.complete)
+        .map((todo) => {
+            toDoListContainer.appendChild(toDoElement(todo))
+        })
 
-    let target =
-    className === "todo-list"
-      ? document.getElementsByClassName("todo-list")
-      : document.getElementsByClassName("list-completed");
-     
-     parent.removeChild(item);
-    
-   
-  }
-
+    completeToDoListContainer.innerHTML = ''
+    toDos
+        .filter((todo) => todo.complete)
+        .map((todo) => {
+            completeToDoListContainer.appendChild(toDoElement(todo))
+        })
 }
 
-//complete event2
-function completeItem2() {
-  
-  let item = this.parentNode.parentNode;
-  
-  let parent = item.parentNode;
-  let className = parent.className;
-  
-  
-  console.log(parent)
-  console.log(item)
-  
-  console.log(className)
-  // check if the item should go in the completed or if it should be re-added to todo by using  operator
-  let target =
-    className === "todo-list"
-      ? document.getElementsByClassName("todo-list")
-      : document.getElementsByClassName("list-completed");
-  
-  parent.removeChild(item);
+const completeToDo = (todo) => {
+    const checkedToDo = { ...todo, complete: !todo.complete }
 
-  
-  console.log(target)
+    toDos = [...toDos.filter((item) => item != todo), checkedToDo]
 
+    renderToDos()
 }
 
+const editToDo = (todo, newContent) => {
+    const editedToDo = { ...todo, name: newContent }
 
+    toDos = [editedToDo, ...toDos.filter((item) => item != todo)]
 
-//EDITITEM EVENTLISTENER
-function editItem (event){
-  const button = event.target
-  
-  let parent = this.parentNode
-  item=parent.children[1]
-  
-  if(button.innerText == 'Edit'){
-    button.innerText = "Save";
-    item.removeAttribute("readonly")
-    item.focus()
-  }else {
-    button.innerText = "Edit"
-    item.setAttribute("readonly", "readonly")
-  }
+    renderToDos()
 }
 
-
-//REMOVEItEM EVENTLISTENER
-function removeItem() {
-  let item = this.parentNode;
-  console.log(item.className)
-  //grab the div
-  let parent = item.parentNode;
-  console.log(parent.className)
-   //remove child
-  parent.removeChild(item);
+const deleteToDo = (todo) => {
+    toDos = toDos.filter((item) => item != todo)
+    renderToDos()
 }
 
+const handleFormSubmission = (event) => {
+    // form elements
+    const newToDoInput = document.querySelector('#newToDoInput')
 
+    // stop page refresh
+    event.preventDefault()
+
+    // create a unique id
+    const newToDoId = toDos.length | 0
+    const newToDo = {
+        id: newToDoId,
+        name: newToDoInput.value,
+        complete: false,
+    }
+
+    toDos = [newToDo, ...toDos]
+
+    renderToDos()
+}
+
+newToDoForm.addEventListener('submit', handleFormSubmission)
